@@ -5,20 +5,22 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestParam;
-import web.service.CarServiceImpl;
+import web.service.CarService;
 
+
+// заменил на интерфейс CarService, теперь тип данных для поля класса CarController - интерфейс
 @Controller
 public class CarController {
-    private final CarServiceImpl carServiceImpl;
+    private final CarService carService;
 
     @Autowired
-    public CarController(CarServiceImpl carServiceImpl) {
-        this.carServiceImpl = carServiceImpl;
+    public CarController(CarService carService) {
+        this.carService = carService;
     }
 
     @GetMapping("/cars")
-    public String printCars(@RequestParam(required = false, defaultValue = "5") Integer count, ModelMap model){
-        model.addAttribute("cars", carServiceImpl.getCars(carServiceImpl.addCars(), count));
+    public String printCars(@RequestParam(required = false, defaultValue = "5") Integer count, ModelMap model) {
+        model.addAttribute("cars", carService.getCars(count));
         return "cars";
     }
 }

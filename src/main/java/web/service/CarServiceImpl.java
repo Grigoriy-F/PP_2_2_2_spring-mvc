@@ -1,35 +1,43 @@
 package web.service;
 
-import org.springframework.stereotype.Component;
+import org.springframework.stereotype.Service;
 import web.model.Car;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
-@Component
+/*
+ Использование @Service помогает:
+  -Обозначить бизнес-логику, отделяя ее от других слоев (например, контроллеров и репозиториев).
+  -Указать Spring, что этот класс является сервисным компонентом, что облегчает его автосвязывание и конфигурирование.
+
+ Особенности @Repository:
+  -Обозначает класс, как компонент доступа к данным.
+  -Позволяет Spring обрабатывать исключения базы данных и переводить их в единую иерархию DataAccessExceptio
+ */
+@Service
 public class CarServiceImpl implements CarService {
-    @Override
-    public List<Car> getCars(List<Car> cars, int count) {
-        if (count >= 6) {
-            return cars;
-        }
 
-        List<Car> res = new ArrayList<>();
-        for (int i = 0; i < count; i++) {
-            res.add(cars.get(i));
-        }
-        return res;
-    }
+    /*
+    Создал поле для списка машин и инициализировал его.
+    Использовал это поле в методе getCars, и удалил метод addCars.
+    Использовал Stream API для фильтрации списка машин.
+     */
 
+    private final List<Car> cars;
 
-    @Override
-    public List<Car> addCars() {
-        List<Car> cars = new ArrayList<>();
+    public CarServiceImpl() {
+        cars = new ArrayList<>();
         cars.add(new Car("GEELY", 12, 1));
         cars.add(new Car("HAVAL", 34, 2));
         cars.add(new Car("CHERY", 56, 3));
         cars.add(new Car("CHANGAN", 78, 4));
         cars.add(new Car("OMODA", 910, 5));
-        return cars;
+    }
+    // Использую Stream API для фильтрации списка машин
+    @Override
+    public List<Car> getCars(int count) {
+        return cars.stream().limit(count).collect(Collectors.toList());
     }
 }
